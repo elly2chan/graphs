@@ -1,5 +1,4 @@
-﻿// Дополнительные сведения о F# см. на http://fsharp.net
-// Дополнительную справку см. в проекте "Учебник по F#".
+﻿open QuickGraph
 
 [<EntryPoint>]
 let main argv = 
