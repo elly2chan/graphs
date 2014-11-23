@@ -1,0 +1,24 @@
+﻿<Window x:Class="ViewGraph.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:graphsharp="clr-namespace:GraphSharp.Controls;assembly=GraphSharp.Controls"
+        xmlns:my="clr-namespace:ViewGraph"
+        Title="MainWindow" Height="350" Width="525"
+        Name="root">
+    <Grid>
+        <Grid.Resources>
+            <my:EdgeColorConverter x:Key="edgeToEdgeColorConverter"/>
+            <Style TargetType="{x:Type graphsharp:EdgeControl}">
+                <Style.Setters>
+                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self},Path=Edge.EdgeColor,Converter={StaticResource edgeToEdgeColorConverter}}"/>
+                </Style.Setters>
+            </Style>
+        </Grid.Resources>
+
+        <graphsharp:GraphLayout x:Name="graphLayout" 
+                                Graph="{Binding ElementName=root,Path=Graph}" 
+                                OverlapRemovalAlgorithmType="FSA"
+                                HighlightAlgorithmType="Simple"
+                                LayoutAlgorithmType="FR"/>
+    </Grid>
+</Window>
