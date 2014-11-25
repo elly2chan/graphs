@@ -92,18 +92,19 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
             (passiveIgnored: List<'Vertex>) =
 
             for index in (passiveSet.Count - 1) .. -1 .. 0 do
-                let vert = passiveSet.[index]
-                let tmp = coversSet vert active
-                if tmp > int a' && tmp < active.Count then
-                    let neighbours = graph.AdjacentEdges vert
-                    for edge in neighbours do
-                        let item = if edge.Target = vert then edge.Source else edge.Target
-                        if active.Contains item then
-                            activePassive.Add item
-                            active.Remove item |> ignore
-                        elif passiveSet.Contains item then
-                            passivePassive.Add item
-                            passiveSet.Remove vert |> ignore
+                if passiveSet.Count <> 0 then
+                    let vert = if index > (passiveSet.Count - 1) then passiveSet.[passiveSet.Count - 1] else passiveSet.[index]
+                    let tmp = coversSet vert active
+                    if tmp > int a' && tmp < active.Count then
+                        let neighbours = graph.AdjacentEdges vert
+                        for edge in neighbours do
+                            let item = if edge.Target = vert then edge.Source else edge.Target
+                            if active.Contains item then
+                                activePassive.Add item
+                                active.Remove item |> ignore
+                            elif passiveSet.Contains item then
+                                passivePassive.Add item
+                                passiveSet.Remove vert |> ignore
 
 
             for index in (passiveSet.Count - 1) .. -1 .. 0 do
@@ -123,20 +124,21 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
             (colorActive: List<'Vertex>) =
 
             for index in (active.Count - 1) .. -1 .. 0 do
-                let vert = active.[index]
-                let tmp = coversSet vert active
-                if tmp > int a' then
-                    colorActive.Add vert
-                    active.Remove vert |> ignore
-                    let neighbours = graph.AdjacentEdges vert
-                    for edge in neighbours do
-                        let item = if edge.Target = vert then edge.Source else edge.Target
-                        if active.Contains item then
-                            activeActive.Add item
-                            active.Remove item |> ignore
-                        elif passive.Contains item then
-                            passiveActive.Add item
-                            passive.Remove item |> ignore
+                if active.Count <> 0 then
+                    let vert = if index > (active.Count - 1) then active.[active.Count - 1] else active.[index]
+                    let tmp = coversSet vert active
+                    if tmp > int a' then
+                        colorActive.Add vert
+                        active.Remove vert |> ignore
+                        let neighbours = graph.AdjacentEdges vert
+                        for edge in neighbours do
+                            let item = if edge.Target = vert then edge.Source else edge.Target
+                            if active.Contains item then
+                                activeActive.Add item
+                                active.Remove item |> ignore
+                            elif passive.Contains item then
+                                passiveActive.Add item
+                                passive.Remove item |> ignore
 
             if colorActive.Count = 0 then
                 let vert = active.[0]
@@ -175,10 +177,11 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                 let tmp = int (floor ((float a') * Math.Pow(float graph.VertexCount, e')))
 
                 for index in (active.Count - 1) .. -1 .. 0 do
-                    let vert = active.[index]
-                    if coversSet vert passive > tmp then
-                        activeDiscard.Add vert
-                        active.Remove vert |> ignore
+                    if active.Count <> 0 then
+                        let vert = if index > (active.Count - 1) then active.[active.Count - 1] else active.[index]
+                        if coversSet vert passive > tmp then
+                            activeDiscard.Add vert
+                            active.Remove vert |> ignore
 
         /// Step 4: graph, P, Ap, Aa, Pi, Ar
         let stepFour
@@ -200,8 +203,8 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                 for item in activePassive do
                     ap2.Add item
                 // TODO: Parallel
-                let res1: List<List<'Vertex>> = iteration graph p1 activePassive d' a'
-                let res2: List<List<'Vertex>> = iteration graph p2 ap2 d' a'
+                let (res1: List<List<'Vertex>>) = iteration graph p1 activePassive d' a'
+                let (res2: List<List<'Vertex>>) = iteration graph p2 ap2 d' a'
                 if res1.Count > res2.Count then
                     Colors.AddRange res1
                 else
