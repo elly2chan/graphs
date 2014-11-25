@@ -1,4 +1,4 @@
-﻿module AchromaticNum.AchromaticPartition
+﻿module AchromaticNum.Algorithm.AchromaticPartition
 
 open QuickGraph
 open System.Collections.Generic
@@ -7,7 +7,7 @@ open System
 
 (*
 type Graph<''Vertex, ''Edge when ''Edge :> I'Edge<''Vertex> and ''Vertex : equality> () =
-    inherit UndirectedGraph<''Vertex, ''Edge>()
+    inherit IUndirectedGraph<''Vertex, ''Edge>()
     
     type 
 
@@ -42,7 +42,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
     let mutable e' = 0.0
     *)
     let firstIteration 
-        (graph: UndirectedGraph<'Vertex, 'Edge>)
+        (graph: IUndirectedGraph<'Vertex, 'Edge>)
         (passive: List<'Vertex>)
         (active: List<'Vertex>) = 
         let d' = log(float graph.VertexCount) / log(2.0)
@@ -63,7 +63,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
         
     /// Iteration: graph, P, A, d', a'
     let rec iteration
-        (graph: UndirectedGraph<'Vertex, 'Edge>) 
+        (graph: IUndirectedGraph<'Vertex, 'Edge>) 
         (passiveSet: List<'Vertex>)
         (activeSet: List<'Vertex>)
         (d': float)
@@ -82,7 +82,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
 
         /// Step 1: graph, P, A, Pp, Ap, Pi
         let stepOne
-            (graph: UndirectedGraph<'Vertex, 'Edge>)
+            (graph: IUndirectedGraph<'Vertex, 'Edge>)
             (passiveSet: List<'Vertex>)
             (active: List<'Vertex>)
             (passivePassive: List<'Vertex>)
@@ -118,7 +118,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
 
         /// Step 2: graph, P, A, Aa, Pa, Ca
         let stepTwo
-            (graph: UndirectedGraph<'Vertex, 'Edge>)
+            (graph: IUndirectedGraph<'Vertex, 'Edge>)
             (passive: List<'Vertex>)
             (active: List<'Vertex>)
             (activeActive: List<'Vertex>)
@@ -154,7 +154,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
 
         /// Step 3: graph, P, A, Cp, Ca, Ad, Pa, Pr
         let stepThree
-            (graph: UndirectedGraph<'Vertex, 'Edge>)
+            (graph: IUndirectedGraph<'Vertex, 'Edge>)
             (passive: List<'Vertex>)
             (active: List<'Vertex>)
             (colorPassive: List<'Vertex>)
@@ -183,7 +183,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
 
         /// Step 4: graph, P, Ap, Aa, Pi, Ar
         let stepFour
-            (graph: UndirectedGraph<'Vertex, 'Edge>)
+            (graph: IUndirectedGraph<'Vertex, 'Edge>)
             (passive: List<'Vertex>)
             (activePassive: List<'Vertex>)
             (activeActive: List<'Vertex>)
@@ -229,7 +229,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
             stepFour graph passiveSet activePassive activeActive passiveIgnored activeSet
         Colors
 
-    member this.Execute (graph: UndirectedGraph<'Vertex, 'Edge>) = 
+    member this.Execute (graph: IUndirectedGraph<'Vertex, 'Edge>) = 
         let Passive = new List<'Vertex>()
         let Active = new List<'Vertex>()
         let d' = log(float graph.VertexCount) / log(2.0)
