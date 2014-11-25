@@ -63,6 +63,8 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="achromaticPartition.fs" />
+    <Compile Include="achromaticNum.fs" />
     <Compile Include="main.fs" />
     <None Include="App.config" />
     <None Include="packages.config" />
