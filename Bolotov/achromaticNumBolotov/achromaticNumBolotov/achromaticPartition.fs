@@ -17,7 +17,7 @@ type Graph<''Vertex, ''Edge when ''Edge :> I'Edge<''Vertex> and ''Vertex : equal
     member this.Colors = colors
 *)        
 
-type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() = 
+type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex: equality>() = 
 (*
     let Passive = new List<'Vertex>()
     let Active = new List<'Vertex>()
@@ -52,14 +52,17 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
 
         Colors.Add <| new List<'Vertex>()
         for item in graph.Vertices do
-            if graph.AdjacentDegree item > a' then
-                Colors.[color].Add item
-                for i in graph.AdjacentEdges item do
-                    active.Add i.Target
-                    passive.Remove i.Target |> ignore
-            elif not <| active.Contains item then
-                passive.Add item
+            passive.Add item
 
+        for item in graph.Vertices do
+            if passive.Contains item then
+                if graph.AdjacentDegree item > a' then
+                    Colors.[color].Add item
+                    passive.Remove item |> ignore
+                    for edge in graph.AdjacentEdges item do
+                        let tmp = if edge.Target = item then edge.Source else edge.Target
+                        active.Add tmp
+                        passive.Remove tmp |> ignore
         
     /// Iteration: graph, P, A, d', a'
     let rec iteration
@@ -74,8 +77,8 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
         let coversSet vert (set: List<'Vertex>) =
             let x = new List<'Vertex>()
             let neighbours = (graph.AdjacentEdges vert)
-            for i in neighbours do
-                let item = i.Target
+            for edge in neighbours do
+                let item = if edge.Target = vert then edge.Source else edge.Target
                 if set.Contains item && not <| x.Contains item then
                     x.Add item
             x.Count
@@ -94,7 +97,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
                 if tmp > int a' && tmp < active.Count then
                     let neighbours = graph.AdjacentEdges vert
                     for edge in neighbours do
-                        let item = edge.Target
+                        let item = if edge.Target = vert then edge.Source else edge.Target
                         if active.Contains item then
                             activePassive.Add item
                             active.Remove item |> ignore
@@ -131,8 +134,8 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
                     colorActive.Add vert
                     toRem.Add vert
                     let neighbours = graph.AdjacentEdges vert
-                    for i in neighbours do
-                        let item = i.Target
+                    for edge in neighbours do
+                        let item = if edge.Target = vert then edge.Source else edge.Target
                         if active.Contains item then
                             activeActive.Add item
                             toRem.Add item
@@ -140,11 +143,12 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex>>() =
                             passiveActive.Add item
                             passive.Remove item |> ignore
             if colorActive.Count = 0 then
-                colorActive.Add active.[0]
+                let vert = active.[0]
+                colorActive.Add vert
                 //  Duplicate code (copy-paste)
-                let neighbours = graph.AdjacentEdges active.[0]
-                for i in neighbours do
-                    let item = i.Target
+                let neighbours = graph.AdjacentEdges vert
+                for edge in neighbours do
+                    let item = if edge.Target = vert then edge.Source else edge.Target
                     if active.Contains item then
                         activeActive.Add item
                         toRem.Add item

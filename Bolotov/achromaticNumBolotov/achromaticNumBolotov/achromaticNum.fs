@@ -24,7 +24,6 @@ let BruteForcePrecise (graph: IUndirectedGraph<Vertex, Edge>) =
 
 let fullColouringApprox (graph: IUndirectedGraph<Vertex, Edge>) = 
     // Supporting func
-
     let fulfilAchromatic (colors: List<List<Vertex>>) =         
         let addToColorSet (vert: Vertex) = 
             let neighbours = graph.AdjacentEdges vert
