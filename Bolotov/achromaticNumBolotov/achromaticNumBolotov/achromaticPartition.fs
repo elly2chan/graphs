@@ -84,15 +84,15 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
             x.Count
 
         /// Step 1: graph, P, A, Pp, Ap, Pi
-        let stepOne
-            (graph: IUndirectedGraph<'Vertex, 'Edge>)
+        let stepOne (graph: IUndirectedGraph<'Vertex, 'Edge>)
             (passiveSet: List<'Vertex>)
             (active: List<'Vertex>)
             (passivePassive: List<'Vertex>)
             (activePassive: List<'Vertex>)
             (passiveIgnored: List<'Vertex>) =
-            let toRem = new List<'Vertex>()
-            for vert in passiveSet do
+
+            for index in (passiveSet.Count - 1) .. -1 .. 0 do
+                let vert = passiveSet.[index]
                 let tmp = coversSet vert active
                 if tmp > int a' && tmp < active.Count then
                     let neighbours = graph.AdjacentEdges vert
@@ -101,23 +101,17 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                         if active.Contains item then
                             activePassive.Add item
                             active.Remove item |> ignore
-                        elif passiveSet.Contains item && not <| toRem.Contains item then
+                        elif passiveSet.Contains item then
                             passivePassive.Add item
-                            toRem.Add item
-            
-            for item in toRem do
-                passiveSet.Remove item |> ignore
+                            passiveSet.Remove vert |> ignore
 
-            toRem.Clear()
 
-            for vert in passiveSet do
+            for index in (passiveSet.Count - 1) .. -1 .. 0 do
+                let vert = passiveSet.[index]
                 let tmp = coversSet vert active
                 if tmp = active.Count then
                     passiveIgnored.Add vert
-                    toRem.Add vert
-
-            for item in toRem do
-                passiveSet.Remove item |> ignore
+                    passiveSet.Remove vert |> ignore
 
         /// Step 2: graph, P, A, Aa, Pa, Ca
         let stepTwo
@@ -127,21 +121,23 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
             (activeActive: List<'Vertex>)
             (passiveActive: List<'Vertex>)
             (colorActive: List<'Vertex>) =
-            let toRem = new List<'Vertex>()
-            for vert in active do
+
+            for index in (active.Count - 1) .. -1 .. 0 do
+                let vert = active.[index]
                 let tmp = coversSet vert active
                 if tmp > int a' then
                     colorActive.Add vert
-                    toRem.Add vert
+                    active.Remove vert |> ignore
                     let neighbours = graph.AdjacentEdges vert
                     for edge in neighbours do
                         let item = if edge.Target = vert then edge.Source else edge.Target
                         if active.Contains item then
                             activeActive.Add item
-                            toRem.Add item
+                            active.Remove item |> ignore
                         elif passive.Contains item then
                             passiveActive.Add item
                             passive.Remove item |> ignore
+
             if colorActive.Count = 0 then
                 let vert = active.[0]
                 colorActive.Add vert
@@ -151,7 +147,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                     let item = if edge.Target = vert then edge.Source else edge.Target
                     if active.Contains item then
                         activeActive.Add item
-                        toRem.Add item
+                        active.Remove item |> ignore
                     elif passive.Contains item then
                         passiveActive.Add item
                         passive.Remove item |> ignore
@@ -177,13 +173,12 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                 active.Clear()
             else 
                 let tmp = int (floor ((float a') * Math.Pow(float graph.VertexCount, e')))
-                let toRem = new List<'Vertex>()
-                for vert in active do
+
+                for index in (active.Count - 1) .. -1 .. 0 do
+                    let vert = active.[index]
                     if coversSet vert passive > tmp then
                         activeDiscard.Add vert
-                        toRem.Add vert
-                for vert in toRem do
-                    active.Remove vert |> ignore
+                        active.Remove vert |> ignore
 
         /// Step 4: graph, P, Ap, Aa, Pi, Ar
         let stepFour
