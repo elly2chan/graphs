@@ -210,16 +210,14 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                 activePassive.AddRange activeActive
                 let ap2 = new List<'Vertex>()
                 ap2.AddRange activePassive
-//                for item in activePassive do
-//                    ap2.Add item
-                // TODO: Parallel
+
                 async {
-                let! (res1: List<List<'Vertex>>) = iteration graph p1 activePassive d' a'
-                let! (res2: List<List<'Vertex>>) = iteration graph p2 ap2 d' a'
-                if res1.Count > res2.Count then
-                    Colors.AddRange res1
-                else
-                    Colors.AddRange res2
+                    let! (res1: List<List<'Vertex>>) = iteration graph p1 activePassive d' a'
+                    let! (res2: List<List<'Vertex>>) = iteration graph p2 ap2 d' a'
+                    if res1.Count > res2.Count then
+                        Colors.AddRange res1
+                    else
+                        Colors.AddRange res2
                 } |> Async.RunSynchronously
 
         let passiveActive = new List<'Vertex>()
