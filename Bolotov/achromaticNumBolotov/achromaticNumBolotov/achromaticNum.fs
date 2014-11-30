@@ -19,7 +19,7 @@ module Helpers =
         toRet
 
 let BruteForcePrecise (graph: IUndirectedGraph<Vertex, Edge>) = 
-    let Colors = new List<List<Vertex>>()
+    let Colors = new List<List<Vertex>>()    
     Colors
 
 let fullColouringApprox (graph: IUndirectedGraph<Vertex, Edge>) = 
@@ -55,6 +55,7 @@ let fullColouringApprox (graph: IUndirectedGraph<Vertex, Edge>) =
     fulfilAchromatic res
     res
 
+/// -1 - broken colouring, 0 - not complete, 1 - complete.
 let checkForCompleteness (graph: IUndirectedGraph<Vertex, Edge>) (colors: List<List<Vertex>>) = 
     let intersection = Array2D.create colors.Count colors.Count false
     let mutable toRet = 0
@@ -64,20 +65,20 @@ let checkForCompleteness (graph: IUndirectedGraph<Vertex, Edge>) (colors: List<L
         for vertex in color do
             let neighbours = graph.AdjacentEdges vertex
             for i in neighbours do
-                let item = i.Target
+                let item = if vertex = i.Target then i.Source else i.Target
                 let x = Helpers.findColor colors item
-                intersection.[index, x] <- true
-                intersection.[x, index] <- true
-                if x = index then
-                    toRet <- -1
-                else ()
+                if x <> -1 then
+                    intersection.[index, x] <- true
+                    intersection.[x, index] <- true
+                    if x = index then
+                        toRet <- -1
     if toRet = -1 then
         toRet
     else
         toRet <- 1
         for i in 0..(colors.Count - 1) do
             for j in 0..(colors.Count - 1) do
-                if not intersection.[i,j] then
+                if not intersection.[i,j] && i<>j then
                     toRet <- 0
                 else ()
         toRet

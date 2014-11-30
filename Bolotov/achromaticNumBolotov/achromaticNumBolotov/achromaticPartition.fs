@@ -22,7 +22,6 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
     let Passive = new List<'Vertex>()
     let Active = new List<'Vertex>()
 *)
-    let Colors = new List<List<'Vertex>>()
 (*    
     let ColorPassive = new List<'Vertex>()
     let ColorActive = new List<'Vertex>()
@@ -49,6 +48,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
         let a' = int d'
         let e' = 1.0 / (sqrt (log(float graph.VertexCount)))
         let color = 0
+        let Colors = new List<List<'Vertex>>()
 
         Colors.Add <| new List<'Vertex>()
         for item in graph.Vertices do
@@ -63,6 +63,12 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                         let tmp = if edge.Target = item then edge.Source else edge.Target
                         active.Add tmp
                         passive.Remove tmp |> ignore
+        for i in (passive.Count - 1) .. -1 .. 0 do
+            let vert = passive.[i]
+            if Colors.[color].Count = 0 && graph.AdjacentDegree vert > 0 then
+                Colors.[color].Add vert
+                passive.Remove vert |> ignore
+        Colors
         
     /// Iteration: graph, P, A, d', a'
     let rec iteration
@@ -73,6 +79,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
         (a': int) = 
         // Constants
         let e' = 1.0 / (sqrt (log(float graph.VertexCount)))
+        let Colors = new List<List<'Vertex>>()
         // Supportive funcs
         let coversSet vert (set: List<'Vertex>) =
             let x = new List<'Vertex>()
@@ -124,7 +131,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
             (colorActive: List<'Vertex>) =
 
             for index in (active.Count - 1) .. -1 .. 0 do
-                if active.Count <> 0 then
+                if active.Count > 0 then
                     let vert = if index > (active.Count - 1) then active.[active.Count - 1] else active.[index]
                     let tmp = coversSet vert active
                     if tmp > int a' then
@@ -140,9 +147,10 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                                 passiveActive.Add item
                                 passive.Remove item |> ignore
 
-            if colorActive.Count = 0 then
+            if colorActive.Count = 0 && active.Count > 0 then
                 let vert = active.[0]
                 colorActive.Add vert
+                active.Remove vert |> ignore
                 //  Duplicate code (copy-paste)
                 let neighbours = graph.AdjacentEdges vert
                 for edge in neighbours do
@@ -164,11 +172,12 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
             (activeDiscard: List<'Vertex>)
             (passiveActive: List<'Vertex>)
             (passiveRecursive: List<'Vertex>) =
-
             //  PassiveRecursive is obsolete
+
             colorActive.AddRange colorPassive
-            Colors.Add colorActive
-            passiveRecursive.AddRange passive
+            if colorActive.Count > 0 then
+                Colors.Add colorActive
+//            passiveRecursive.AddRange passive
             passive.AddRange passiveActive
             if active.Count <= int (floor (Math.Pow(float graph.VertexCount, 1.0 - e'))) then
                 activeDiscard.AddRange active
@@ -200,41 +209,47 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                 let p2 = activeRecursive
                 activePassive.AddRange activeActive
                 let ap2 = new List<'Vertex>()
-                for item in activePassive do
-                    ap2.Add item
+                ap2.AddRange activePassive
+//                for item in activePassive do
+//                    ap2.Add item
                 // TODO: Parallel
-                let (res1: List<List<'Vertex>>) = iteration graph p1 activePassive d' a'
-                let (res2: List<List<'Vertex>>) = iteration graph p2 ap2 d' a'
+                async {
+                let! (res1: List<List<'Vertex>>) = iteration graph p1 activePassive d' a'
+                let! (res2: List<List<'Vertex>>) = iteration graph p2 ap2 d' a'
                 if res1.Count > res2.Count then
                     Colors.AddRange res1
                 else
                     Colors.AddRange res2
+                } |> Async.RunSynchronously
 
-        do
-            let passiveActive = new List<'Vertex>()
-            let passivePassive = new List<'Vertex>()
-            let activePassive = new List<'Vertex>()
-            let activeActive = new List<'Vertex>()
+        let passiveActive = new List<'Vertex>()
+        let passivePassive = new List<'Vertex>()
+        let activePassive = new List<'Vertex>()
+        let activeActive = new List<'Vertex>()
 
-            let passiveIgnored = new List<'Vertex>()
+        let passiveIgnored = new List<'Vertex>()
 
-            let colorActive = new List<'Vertex>()
-            let colorPassive = new List<'Vertex>()
+        let colorActive = new List<'Vertex>()
+        let colorPassive = new List<'Vertex>()
 
-            let activeDiscard = new List<'Vertex>()
+        let activeDiscard = new List<'Vertex>()
 
-            let passiveRecursive = new List<'Vertex>()
+        let passiveRecursive = new List<'Vertex>()
 
-            stepOne graph passiveSet activeSet passivePassive activePassive passiveIgnored
-            stepTwo graph passiveSet activeSet activeActive passiveActive colorActive
-            stepThree graph passiveSet activeSet colorPassive colorActive activeDiscard passiveActive passiveRecursive
-            stepFour graph passiveSet activePassive activeActive passiveIgnored activeSet
-        Colors
+        stepOne graph passiveSet activeSet passivePassive activePassive passiveIgnored
+        stepTwo graph passiveSet activeSet activeActive passiveActive colorActive
+        stepThree graph passiveSet activeSet colorPassive colorActive activeDiscard passiveActive passiveRecursive
+        stepFour graph passiveSet activePassive activeActive passiveIgnored activeSet
+        async { return Colors }
 
     member this.Execute (graph: IUndirectedGraph<'Vertex, 'Edge>) = 
         let Passive = new List<'Vertex>()
         let Active = new List<'Vertex>()
         let d' = log(float graph.VertexCount) / log(2.0)
         let a' = int d'
-        firstIteration graph Passive Active
-        iteration graph Passive Active d' a'
+        let col = firstIteration graph Passive Active
+        async {
+            let! res = iteration graph Passive Active d' a'
+            col.AddRange res
+        } |> Async.RunSynchronously
+        col
