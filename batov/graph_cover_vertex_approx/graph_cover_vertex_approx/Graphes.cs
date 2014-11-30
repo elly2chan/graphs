@@ -190,26 +190,26 @@ namespace graph_cover_vertex_approx
             graph.AddVertex("2");
             graph.AddVertex("3");
             graph.AddVertex("4");
-            graph.AddVertex("5");
-            graph.AddVertex("6");
+            //graph.AddVertex("5");
+            //graph.AddVertex("6");
 
             // Create the edges
             Edge<string> e1_2 = new Edge<string>("1", "2");
-            Edge<string> e1_4 = new Edge<string>("1", "4");
-            Edge<string> e4_1 = new Edge<string>("4", "2");
+           // Edge<string> e1_4 = new Edge<string>("1", "4");
+            Edge<string> e4_1 = new Edge<string>("4", "1");
             Edge<string> e2_3 = new Edge<string>("2", "3");
-            Edge<string> e3_6 = new Edge<string>("3", "6");
-            Edge<string> e6_5 = new Edge<string>("6", "5");
-            Edge<string> e2_5 = new Edge<string>("2", "5");
+            Edge<string> e3_4 = new Edge<string>("3", "4");
+            //Edge<string> e6_5 = new Edge<string>("6", "5");
+            //Edge<string> e2_5 = new Edge<string>("2", "5");
 
             // Add the edges
             graph.AddEdge(e1_2);
-            graph.AddEdge(e1_4);
+            //graph.AddEdge(e1_4);
             graph.AddEdge(e4_1);
             graph.AddEdge(e2_3);
-            graph.AddEdge(e3_6);
-            graph.AddEdge(e6_5);
-            graph.AddEdge(e2_5);
+            graph.AddEdge(e3_4);
+            //graph.AddEdge(e6_5);
+            //graph.AddEdge(e2_5);
             return graph;
         }
     }
