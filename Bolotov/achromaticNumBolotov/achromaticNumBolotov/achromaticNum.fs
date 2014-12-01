@@ -11,11 +11,9 @@ module Helpers =
     let noColor = -1
     let findColor (colors: List<List<Vertex>>) (vert: Vertex) = 
         let mutable toRet = noColor
-        for color in colors do
-            if color.Contains vert then
-                toRet <- colors.IndexOf color
-            else
-                ()
+        for i in 0..(colors.Count - 1) do
+            if colors.[i].Contains vert then
+                toRet <- i
         toRet
 
 let BruteForcePrecise (graph: IUndirectedGraph<Vertex, Edge>) = 
@@ -29,7 +27,7 @@ let fullColouringApprox (graph: IUndirectedGraph<Vertex, Edge>) =
             let neighbours = graph.AdjacentEdges vert
             let selected = new List<int>()
             for item in neighbours do
-                let target = item.Target
+                let target = if vert = item.Target then item.Source else item.Target
                 let x = Helpers.findColor colors target
                 if x <> Helpers.noColor then
                     if not <| selected.Contains x then
