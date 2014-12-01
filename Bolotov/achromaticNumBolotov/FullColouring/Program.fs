@@ -44,11 +44,11 @@ module Helper =
                     let x = new Edge(i, item)
                     graph.AddEdge x |> ignore
         graph
-
+(*
     let mapColor color = 
         match color with
         | 1 -> QuickGraph.Color
-
+*)
     let complete count = random count 101
 
 [<EntryPoint>]
@@ -59,7 +59,8 @@ let main argv =
             name <- argv.[i + 1]
     let x = ReadDot.loadDotToQG name
     let res = fullColouringApprox x
-    let gviz = new Graphviz.GraphvizAlgorithm<int, SEdge<int>>(x)
-    gviz.FormatVertex.Add (fun x -> x.VertexFormatter.Group <- string <| Helper.findColor res x.Vertex)
-    printf "%A" gviz.Output
+//    let gviz = new Graphviz.GraphvizAlgorithm<int, SEdge<int>>(x)
+//    gviz.FormatVertex.Add (fun x -> x.VertexFormatter.Group <- string <| Helper.findColor res x.Vertex)
+//    printf "%A" gviz.Output
+    printf "%A" res.Count
     0 // возвращение целочисленного кода выхода
