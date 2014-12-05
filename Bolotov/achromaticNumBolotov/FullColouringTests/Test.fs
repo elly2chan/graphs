@@ -31,8 +31,10 @@ type ``Main Tests``() =
     [<Test>]
     member this.``Complete graphs`` () = 
         for i in 1..10 do
-            Assert.True(i = (fullColouringApprox <| Helper.complete i).Count)
-
+            let x = Helper.complete i
+            let res = i = (fullColouringApprox x).Count
+            Assert.True(res)
+            
     [<Test>]
     member this.``Empty graph`` () = 
         let g = new UndirectedGraph<Vertex, Edge>()
@@ -44,113 +46,133 @@ type ``Random 10 graphs`` () =
     let count = 10
     [<Test>]
     member this.``10% edges`` () = 
-        let graph = Helper.random count 10
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 10
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``20% edges`` () = 
-        let graph = Helper.random count 20
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+                let graph = Helper.random count 20
+                Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``30% edges`` () = 
-        let graph = Helper.random count 30
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 30
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``40% edges`` () = 
-        let graph = Helper.random count 40
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 40
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
         
     [<Test>]
     member this.``50% edges`` () = 
-        let graph = Helper.random count 50
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 50
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
 
     [<Test>]
     member this.``70% edges`` () = 
-        let graph = Helper.random count 70
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 70
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``90% edges`` () = 
-        let graph = Helper.random count 90
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 90
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
         
 [<TestFixture>]
 type ``Random 100 graphs`` () = 
     let count = 100
     [<Test>]
     member this.``10% edges`` () = 
-        let graph = Helper.random count 10
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 10
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``20% edges`` () = 
-        let graph = Helper.random count 20
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 20
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``30% edges`` () = 
-        let graph = Helper.random count 30
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+            let graph = Helper.random count 30
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``40% edges`` () = 
-        let graph = Helper.random count 40
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 40
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
         
     [<Test>]
     member this.``50% edges`` () = 
-        let graph = Helper.random count 50
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 50
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
 
     [<Test>]
     member this.``70% edges`` () = 
-        let graph = Helper.random count 70
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 70
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``90% edges`` () = 
-        let graph = Helper.random count 90
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 90
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
         
 [<TestFixture>]
 type ``Random 1000 graphs`` () = 
     let count = 1000
     [<Test>]
     member this.``10% edges`` () = 
-        let graph = Helper.random count 10
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 10
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
         
     [<Test>]
     member this.``20% edges`` () = 
-        let graph = Helper.random count 20
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 20
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``30% edges`` () = 
-        let graph = Helper.random count 30
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 30
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
         
     [<Test>]
     member this.``40% edges`` () = 
-        let graph = Helper.random count 40
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 40
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``50% edges`` () = 
-        let graph = Helper.random count 50
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 50
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
 
     [<Test>]
     member this.``70% edges`` () = 
-        let graph = Helper.random count 70
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 70
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
         
     [<Test>]
     member this.``90% edges`` () = 
-        let graph = Helper.random count 90
-        Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))
+        for i in 1..100 do
+            let graph = Helper.random count 90
+            Assert.True(1 = checkForCompleteness graph (fullColouringApprox graph))

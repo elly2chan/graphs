@@ -6,11 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f5ce0ac2-56f8-420e-9d56-9a09f91ea4ff</ProjectGuid>
-<<<<<<< HEAD
     <OutputType>Library</OutputType>
-=======
-    <OutputType>Exe</OutputType>
->>>>>>> origin/master
     <RootNamespace>achromaticNumBolotov</RootNamespace>
     <AssemblyName>achromaticNumBolotov</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -46,7 +42,6 @@
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
-<<<<<<< HEAD
     <Reference Include="QuickGraph">
       <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.dll</HintPath>
       <Private>True</Private>
@@ -63,22 +58,15 @@
       <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Serialization.dll</HintPath>
       <Private>True</Private>
     </Reference>
-=======
->>>>>>> origin/master
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <Compile Include="achromaticPartition.fs" />
     <Compile Include="achromaticNum.fs" />
     <None Include="App.config" />
     <None Include="packages.config" />
-=======
-    <Compile Include="Program.fs" />
-    <None Include="App.config" />
->>>>>>> origin/master
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

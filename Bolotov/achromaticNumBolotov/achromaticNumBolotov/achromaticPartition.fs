@@ -153,7 +153,7 @@ type AchromaticPartition<'Vertex, 'Edge when 'Edge :> IEdge<'Vertex> and 'Vertex
                                 passiveActive.Add item
                                 passive.Remove item |> ignore
 
-            if colorActive.Count = 0 then
+            if colorActive.Count = 0 && active.Count > 0 then
                 let vert = active.[0]
                 colorActive.Add vert
                 active.Remove vert |> ignore

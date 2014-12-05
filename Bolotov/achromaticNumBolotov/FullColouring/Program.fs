@@ -54,13 +54,18 @@ module Helper =
 [<EntryPoint>]
 let main argv = 
     let mutable name = "test.dot"
-    for i in 0..argv.Length do
+    let outfile = "output.dot"
+    for i in 0..(argv.Length - 1) do
         if argv.[i] = "-n" then
-            name <- argv.[i + 1]
-    let x = ReadDot.loadDotToQG name
+            try
+                name <- argv.[i + 1]
+            with
+            | ex -> ()
+//    let x = ReadDot.loadDotToQG name
+    let x = Helper.complete 5
     let res = fullColouringApprox x
-//    let gviz = new Graphviz.GraphvizAlgorithm<int, SEdge<int>>(x)
-//    gviz.FormatVertex.Add (fun x -> x.VertexFormatter.Group <- string <| Helper.findColor res x.Vertex)
-//    printf "%A" gviz.Output
-    printf "%A" res.Count
+    let gviz = new Graphviz.GraphvizAlgorithm<int, SEdge<int>>(x)
+    gviz.FormatVertex.Add (fun x -> x.VertexFormatter.Group <- string <| Helper.findColor res x.Vertex)
+    (outfile, gviz.Generate()) |> File.WriteAllText
+//    printf "%A" res.Count
     0 // возвращение целочисленного кода выхода
