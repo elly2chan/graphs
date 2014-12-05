@@ -1,10 +1,27 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
+<<<<<<< HEAD
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "achromaticNumBolotov", "achromaticNumBolotov\achromaticNumBolotov.fsproj", "{F5CE0AC2-56F8-420E-9D56-9A09F91EA4FF}"
 EndProject
+=======
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "achromaticNumBolotov", "achromaticNumBolotov\achromaticNumBolotov.fsproj", "{F5CE0AC2-56F8-420E-9D56-9A09F91EA4FF}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FullColouringTests", "FullColouringTests\FullColouringTests.fsproj", "{A272E598-F244-45BE-BAED-3B8BC7CE712A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F5CE0AC2-56F8-420E-9D56-9A09F91EA4FF} = {F5CE0AC2-56F8-420E-9D56-9A09F91EA4FF}
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FullColouring", "FullColouring\FullColouring.fsproj", "{FBC4B6A4-32AC-482D-9022-E907E0688C9D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F5CE0AC2-56F8-420E-9D56-9A09F91EA4FF} = {F5CE0AC2-56F8-420E-9D56-9A09F91EA4FF}
+	EndProjectSection
+EndProject
+>>>>>>> origin/Bolotov
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +32,17 @@ Global
 		{F5CE0AC2-56F8-420E-9D56-9A09F91EA4FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5CE0AC2-56F8-420E-9D56-9A09F91EA4FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5CE0AC2-56F8-420E-9D56-9A09F91EA4FF}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
+=======
+		{A272E598-F244-45BE-BAED-3B8BC7CE712A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A272E598-F244-45BE-BAED-3B8BC7CE712A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A272E598-F244-45BE-BAED-3B8BC7CE712A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A272E598-F244-45BE-BAED-3B8BC7CE712A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBC4B6A4-32AC-482D-9022-E907E0688C9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBC4B6A4-32AC-482D-9022-E907E0688C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBC4B6A4-32AC-482D-9022-E907E0688C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBC4B6A4-32AC-482D-9022-E907E0688C9D}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> origin/Bolotov
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
