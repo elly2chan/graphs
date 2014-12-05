@@ -61,8 +61,7 @@ let main argv =
                 name <- argv.[i + 1]
             with
             | ex -> ()
-//    let x = ReadDot.loadDotToQG name
-    let x = Helper.complete 5
+    let x = ReadDot.loadDotToQG name
     let res = fullColouringApprox x
     let gviz = new Graphviz.GraphvizAlgorithm<int, SEdge<int>>(x)
     gviz.FormatVertex.Add (fun x -> x.VertexFormatter.Group <- string <| Helper.findColor res x.Vertex)
