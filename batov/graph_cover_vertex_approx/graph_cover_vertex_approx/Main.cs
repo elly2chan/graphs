@@ -18,7 +18,8 @@ namespace graph_cover_vertex_approx
         static void Main(string[] args)
         {
             UndirectedGraph<string, Edge<string>> graph;
-            VertexList<TVertex> result;
+            //VertexList<TVertex> result;
+            int result;
             System.Diagnostics.Stopwatch myStopwatch = new System.Diagnostics.Stopwatch();
 
              //graph = Graphes.CreateGraph();
@@ -27,18 +28,18 @@ namespace graph_cover_vertex_approx
             // graph = Graphes.CreateRandomGraph(3,2);
             // graph = Tools.ReadInDotFile("dottest.dot");
              List<string> lines = new List<string>();
-             for (int i = 1; i <= 100; i++)
+             for (int i = 1; i <= 10; i++)
              {
-                 graph = Graphes.CreateRandomGraph(i, 2);
+                 graph = Graphes.CreateRandomGraph(i, 4);
 
                  myStopwatch.Start();
-                 result = Algorithms.standartAlgo(graph);
+                 result = Algorithms.minVertexCover(graph);
                  myStopwatch.Stop();
-                 Console.WriteLine("standart: {0}",result.Count);
-                 lines.Add(String.Format("{0} : {1}", i ,myStopwatch.Elapsed));
+                 Console.WriteLine("number: {0}",i);
+                 lines.Add(String.Format("{0} : {1}", i ,result));
                  myStopwatch.Reset();
              }
-             System.IO.File.WriteAllLines(@"C:\Users\1\Desktop\text.txt", lines);
+             System.IO.File.WriteAllLines(@"C:\Users\1\Desktop\k4full.txt", lines);
 
                  /*
                   Console.WriteLine(String.Concat("Vertex count = ", graph.VertexCount));
