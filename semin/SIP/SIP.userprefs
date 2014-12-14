@@ -1,0 +1,40 @@
+﻿<Properties GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
+    <Files>
+      <File FileName="Program.cs" Line="243" Column="6" />
+      <File FileName="QuickSI.cs" Line="1" Column="1" />
+      <File FileName="SEQ.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="SIP" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="UllmanSIP.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>h</Value>
+          <Value>f</Value>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/media/alllex/data/projects/homeworks71/sem5/SIP/UllmanSIP.cs" line="38" column="1" />
+      <Breakpoint file="/media/alllex/data/projects/homeworks71/sem5/SIP/QuickSI.cs" line="30" column="1" />
+      <Breakpoint file="/media/alllex/data/projects/homeworks71/sem5/SIP/SEQ.cs" line="36" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
