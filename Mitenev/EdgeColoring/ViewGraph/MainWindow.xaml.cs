@@ -16,6 +16,7 @@ using GraphSharp.Controls;
 using GraphSharp;
 using QuickGraph;
 using EdgeColoring;
+using System.IO;
 
 namespace ViewGraph
 {
@@ -25,16 +26,28 @@ namespace ViewGraph
 
         public MainWindow()
         {
-            var gb = new GraphBuilder();
-            var g = gb.buildRandomGraph();
+            var graphIO = new GraphIO();
+            var g = new UndirectedGraph<int, TaggedEdge<int,int>>();
+            try
+            {
+                g = graphIO.readGraph(@"test.dot");
+            }
+            catch(FileNotFoundException ex)
+            {
+                Console.WriteLine("File not found");
+            }
 
-            var ep = new EdgePainter();
-            ep.edgeColoring(g);
+            if (g != null)
+            {
+                
+                var ep = new EdgePainter();
+                ep.edgeColoring(g);
+                graphIO.writeToFile(@"ans.dot", g);
+                //var converter = new GraphConverter();
+                //var graph = converter.Convert(g);
 
-            var converter = new GraphConverter();          
-            var graph = converter.Convert(g);
-
-            Graph = graph;
+                //Graph = graph;
+            }
             InitializeComponent();
         }
     }

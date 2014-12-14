@@ -19,6 +19,6 @@
                                 Graph="{Binding ElementName=root,Path=Graph}" 
                                 OverlapRemovalAlgorithmType="FSA"
                                 HighlightAlgorithmType="Simple"
-                                LayoutAlgorithmType="FR"/>
+                                LayoutAlgorithmType="FR" Margin="33,30,83,23"/>
     </Grid>
 </Window>

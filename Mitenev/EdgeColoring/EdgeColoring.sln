@@ -7,6 +7,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "EdgeColoring", "EdgeColorin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewGraph", "ViewGraph\ViewGraph.csproj", "{A19D91A7-138A-4C77-A629-6FE2AF864D4C}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Measurement", "Measurement\Measurement.fsproj", "{0184D530-9C3A-4102-9F15-9C009FAD1369}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A19D91A7-138A-4C77-A629-6FE2AF864D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A19D91A7-138A-4C77-A629-6FE2AF864D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A19D91A7-138A-4C77-A629-6FE2AF864D4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0184D530-9C3A-4102-9F15-9C009FAD1369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0184D530-9C3A-4102-9F15-9C009FAD1369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0184D530-9C3A-4102-9F15-9C009FAD1369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0184D530-9C3A-4102-9F15-9C009FAD1369}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
