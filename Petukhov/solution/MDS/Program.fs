@@ -17,6 +17,7 @@ module GeneticConstants =
 
 let rnd = Random()
 let toD (x : int) = Convert.ToDouble x
+let genEdge n = (rnd.Next(n), rnd.Next(n))
 
 type Chromosome = int []
 type Fitness    = float
@@ -30,11 +31,11 @@ type DotEngine() =
             dot.Insert(dot.IndexOf("\",") + 2, ";") |> (fun s -> s.Remove(s.IndexOf(",;"), 1))) // sorry
         let args = String.Format(@"{0} -Tjpg -O", filename)
         Diagnostics.Process.Start("dot.exe", args) |> ignore
-        Threading.Thread.Sleep(400)
-        try Diagnostics.Process.Start(filename + ".jpg") |> ignore with e -> printfn "Can't open img."
+        Threading.Thread.Sleep(500)
+        try Diagnostics.Process.Start(filename + ".jpg") |> ignore with e -> printfn "Can't open img. Image is still processing."
         filename
 
-type GraphType = Dot | Random | Sample
+type GraphType = Dot | Random | Sample | RE
 
 type Graph(t : GraphType, n : string) =
     let name = n
@@ -45,12 +46,26 @@ type Graph(t : GraphType, n : string) =
     let mutable mds  = Array.create<int> vNum -1
     do
         match t with
+        | RE ->
+            vNum <- 80
+            let coeff = 0.085
+            let N = vNum * (vNum - 1) / 2
+            let eNum = (int) (coeff * (float) N)
+            List.iter (fun v -> graph.AddVertex(v) |> ignore) [0..vNum - 1]
+            let rec addRndEdges edges currNum =
+                if (currNum > 0)
+                then let (v1, v2) = genEdge(vNum)
+                     if List.exists (fun (x, y) -> (v1 = x && v2 = y) || (v2 = x && v1 = y)) edges
+                     then addRndEdges edges currNum
+                     else graph.AddEdge (new UndirectedEdge<int>(v1, v2)) |> ignore 
+                          addRndEdges (List.append edges [(v1, v2)]) (currNum - 1)
+            addRndEdges [] eNum
+            printfn "Random graph with %A nodes and %A edges generated." vNum eNum
         | Random ->
             vNum <- rnd.Next(vNumMin, vNumMax)
             List.iter (fun v -> graph.AddVertex(v) |> ignore) [0..vNum - 1]
             for i in 1..rnd.Next(vNum / 2 + vNum, 2 * vNum) do
-                let v1 = rnd.Next(vNum)
-                let v2 = rnd.Next(vNum)
+                let v1, v2 = genEdge(vNum)
                 if (not (graph.ContainsEdge(v1, v2) || v1 = v2 || (graph.ContainsEdge(v2, v1))))
                 then graph.AddEdge (new UndirectedEdge<int>(v1, v2)) |> ignore
         | Sample ->
@@ -107,7 +122,7 @@ type Graph(t : GraphType, n : string) =
                          n <- n + 1
         n
 
-let graph = new Graph()
+let graph = new Graph(RE)
 
 //////////////////// FITNESS //////////////////////////////////////
 let computeFitness (chromosome : Chromosome) : Fitness =
@@ -320,7 +335,9 @@ let updateDS (ds :  Option<Individual> []) (best : Individual) (i : int) =
 
 
 ///////////////////////////HGA/////////////////////////////////////
-let HGA =
+let HGA i =
+    printfn "HGA run number %A" i
+
     let mutable ds : Option<Individual> [] = Array.create GeneticConstants.nCore None
     let p0 = initPopulation GeneticConstants.M
     
@@ -359,7 +376,9 @@ let HGA =
     | None -> ()
     best
 
-let GA =
+let GA i =
+    printfn "GA run number %A" i
+
     let p0 = initPopulation GeneticConstants.M
     let mutable pt   = p0 |> updateFitnesses
     let mutable best = findBestIndividual pt // last best individual value
@@ -374,36 +393,69 @@ let GA =
 
     best
 
-[<EntryPoint>]
-let main argv =
-    let sw = new System.Diagnostics.Stopwatch()
+type Test() =
+  member x.run(i) =
+    printfn "Test #%A" i
 
-    //for i in 1..20 do
-    //    printfn "---------%A----------------" i
-        
+    let sw = new System.Diagnostics.Stopwatch()
+    sw.Reset()
     sw.Start()
-    let hga_res = HGA
+    let hga_res = HGA i
     sw.Stop()
-    printfn "HGA ex.time = %A" sw.Elapsed.TotalMilliseconds
+    let time_hga = sw.Elapsed.TotalMilliseconds
+    printfn "HGA ex.time = %A" time_hga
 
     sw.Restart()
-    let ga_res = GA
+    let ga_res = GA i
     sw.Stop()
-    printfn "GA ex.time = %A" sw.Elapsed.TotalMilliseconds
+    let time_ga = sw.Elapsed.TotalMilliseconds
+    printfn "GA ex.time = %A" time_ga
+
+    let nodes_hga = Array.sum(fst hga_res)
+    let nodes_ga = Array.sum(fst ga_res)
 
     printfn "HGA Result:\n %A" <| snd hga_res
-    printfn "Nodes# %A" <| Array.sum(fst hga_res)
+    printfn "Nodes# %A" <| nodes_hga
 
     printfn "GA Result:\n %A" <| snd ga_res
-    printfn "Nodes# %A" <| Array.sum(fst ga_res)
+    printfn "Nodes# %A" <| nodes_ga
 
-    //printfn "----------------------------"
-        
-    graph.setMDS <| fst hga_res
-    graph.Render((snd hga_res), Array.sum(fst hga_res))
+    printfn "----------------------"
+    printfn ""
 
-    graph.setMDS <| fst ga_res
-    graph.Render((snd ga_res), Array.sum(fst ga_res))
+    (nodes_hga, time_hga), (nodes_ga, time_ga)
+    //graph.setMDS <| fst hga_res
+    //graph.Render((snd hga_res), Array.sum(fst hga_res))
+
+    //graph.setMDS <| fst ga_res
+    //graph.Render((snd ga_res), Array.sum(fst ga_res))
+
+[<EntryPoint>]
+let main argv =
+    let t = Test()
+    let runs = 20
+    
+    let mutable totaltime_hga = 0.0
+    let mutable totaltime_ga = 0.0
+    
+    let mutable totalnodes_hga = 0
+    let mutable totalnodes_ga = 0
+
+    for i in 1..runs do
+        let res = t.run(i)
+
+        totalnodes_hga <- totalnodes_hga + (fst <| fst res)
+        totaltime_hga <- totaltime_hga + (snd <| fst res)
+
+        totalnodes_ga <- totalnodes_ga + (fst <| snd res)
+        totaltime_ga <- totaltime_ga + (snd <| snd res)
+
+    printfn ">>>RESULT<<<"
+    printfn "HGA time = %A" (totaltime_hga / (float) runs)
+    printfn "HGA nodes = %A" (totalnodes_hga / runs)
+
+    printfn "GA time = %A" (totaltime_ga / (float) runs)
+    printfn "GA nodes = %A" (totalnodes_ga / runs)
 
     Console.ReadKey() |> ignore
     0
