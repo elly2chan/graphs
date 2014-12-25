@@ -6,10 +6,14 @@ open System.Diagnostics
 
 type Graph() =
 
-    static member buildExample() =
-        let edges = [("A", "B"); ("A", "C"); ("A", "D"); ("B", "D"); ("C", "E"); ("D", "E"); ("E", "D"); ("E", "A")]
+    static member graphFromEdges(edges : (string * string) list) =
         let graph = new AdjacencyGraph<string, Edge<string>>()
         List.iter (fun (source, target) -> graph.AddVerticesAndEdge(new Edge<string>(source, target)) |> ignore) edges
+        graph
+
+    static member graphFromVertices(n : int) =
+        let graph = new AdjacencyGraph<string, Edge<string>>()
+        List.iter (fun x -> graph.AddVertex(x.ToString()) |> ignore) [1 .. n]
         graph
 
     static member randomGraph(n : int) =
@@ -17,7 +21,7 @@ type Graph() =
         let vertices = [ for i in 1 .. n do yield i.ToString() ]
             
         //let numberOfEdges = rnd.Next(1, n * (n - 1) + 1)
-        let numberOfEdges = n * (n - 1) * 10/100  //% of filling
+        let numberOfEdges = n * (n - 1) * 100/100  //% of filling
 
         let createEdges numberOfEdges numberOfVertices = 
             
@@ -43,10 +47,10 @@ type Graph() =
             
 
 
-    static member removeIncomingEdges(initial : AdjacencyGraph<string, Edge<string>>,
-                                      destination : AdjacencyGraph<string, Edge<string>>,
-                                      feedbackArcSet : AdjacencyGraph<string, Edge<string>>,
-                                      vertex : string) =
+    static member private removeIncomingEdges(initial : AdjacencyGraph<string, Edge<string>>,
+                                              destination : AdjacencyGraph<string, Edge<string>>,
+                                              feedbackArcSet : AdjacencyGraph<string, Edge<string>>,
+                                              vertex : string) =
         //Add outcoming edges to the resulting graph and remove them from initial
         for e in initial.Edges.Where(fun e -> e.Source = vertex) do
             destination.AddEdge(e) |> ignore
@@ -58,10 +62,10 @@ type Graph() =
         initial.RemoveEdgeIf(fun e -> e.Target = vertex) |> ignore
         ()
 
-    static member removeOutcomingEdges(initial : AdjacencyGraph<string, Edge<string>>,
-                                       destination : AdjacencyGraph<string, Edge<string>>,
-                                       feedbackArcSet : AdjacencyGraph<string, Edge<string>>,
-                                       vertex : string) =
+    static member private removeOutcomingEdges(initial : AdjacencyGraph<string, Edge<string>>,
+                                               destination : AdjacencyGraph<string, Edge<string>>,
+                                               feedbackArcSet : AdjacencyGraph<string, Edge<string>>,
+                                               vertex : string) =
         //Add incoming edges to the resulting graph
         for e in initial.Edges.Where(fun e -> e.Target = vertex) do
             destination.AddEdge(e) |> ignore
@@ -75,11 +79,11 @@ type Graph() =
         initial.RemoveEdgeIf(fun e -> e.Source = vertex) |> ignore
         ()
 
-    static member inDegree(graph : AdjacencyGraph<string, Edge<string>>, vertex : string) =
+    static member private inDegree(graph : AdjacencyGraph<string, Edge<string>>, vertex : string) =
         let g = graph.Clone()
         g.RemoveEdgeIf(fun e -> e.Target = vertex)
 
-    static member outDegree(graph : AdjacencyGraph<string, Edge<string>>, vertex : string) =
+    static member private outDegree(graph : AdjacencyGraph<string, Edge<string>>, vertex : string) =
         let g = graph.Clone()
         g.RemoveEdgeIf(fun e -> e.Source = vertex)
 
@@ -102,15 +106,15 @@ type Graph() =
 [<EntryPoint>]
 let main argv = 
 
-    let g = Graph.randomGraph(1000)
+    //let g = Graph.randomGraph(100)
+    let g = Graph.randomGraph(0)
     let s = new Stopwatch()
     s.Start()
     let dest = Graph.algorithm(g)
     s.Stop()
-    printfn " %A" (int s.ElapsedMilliseconds)
+    //printfn " %A" (int s.ElapsedMilliseconds) 
+    printfn "%A" <| Seq.map (fun x -> x.ToString()) dest.Edges
 
-    //printfn "%A" g 
-
-    //Seq.map (fun x -> printfn "%A" <| x.ToVertexPair()) <| g.Edges.ToList() |> ignore
+    //Graph.buildGraph([("A", "B"); ("A", "C"); ("A", "D"); ("B", "D"); ("C", "E"); ("D", "E"); ("E", "D"); ("E", "A")])
    
     0 // return an integer exit code
